@@ -1,39 +1,33 @@
-<!doctype html>
-<html lang="fr">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Layout à deux colonnes</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link
-            href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css"
-            rel="stylesheet"
-            type="text/css"
-        />
-    </head>
-    <body class="bg-base-100 p-4">
-        <div class="container mx-auto">
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+    <div class="container mx-auto">
+        <div>
+                <a href="/galerie" class="btn btn-secondary">Galerie SVG</a>
+            </div>
+
             <!-- Layout principal avec deux colonnes -->
             <div class="flex flex-col lg:flex-row gap-6 min-h-screen">
-
-
                 <!-- Colonne de gauche -->
-                <div id="svg-container" class="flex-1  rounded-lg p-6 bg-secondary-content">
+                <div
+                    id="svg-container"
+                    class="flex-1 rounded-lg p-6 bg-secondary-content"
+                >
                     <h2 class="text-2xl font-bold mb-4"></h2>
                     <p class="text-base-content/70 mb-4"></p>
-                    <div class=" p-4 rounded-lg">
-                     
-                    </div>
+                    <div class="p-4 rounded-lg"></div>
                 </div>
 
                 <!-- Colonne de droite -->
-                <div id="svg-output"
-                class="flex-1  rounded-lg p-6 bg-secondary-content">
+                <div
+                    id="svg-output"
+                    class="flex-1 rounded-lg p-6 bg-secondary-content"
+                >
                     <h2 class="text-2xl font-bold mb-4"></h2>
                     <p class="text-base-content/70 mb-4"></p>
-                    <div class=" p-4 rounded-lg">
-                   
-                    </div>
+                    <div class="p-4 rounded-lg"></div>
                 </div>
             </div>
 
@@ -49,10 +43,18 @@
                         id="generate-button"
                         class="btn btn-soft btn-secondary w-full sm:w-auto"
                         >Generate</button
-
-                    > <input id="svg-name" type="text" placeholder="Nom du SVG..." class="input input-bordered w-full sm:w-auto"/>
-<button id="save-button" class="btn btn-secondary w-full sm:w-auto">Enregistrer</button>
-
+                    >
+                    <input
+                        id="svg-name"
+                        type="text"
+                        placeholder="Nom du SVG..."
+                        class="input input-bordered w-full sm:w-auto"
+                    />
+                    <button
+                        id="save-button"
+                        class="btn btn-secondary w-full sm:w-auto"
+                        >Enregistrer</button
+                    >
                 </div>
             </div>
             <!-- <div id="svg-container" class="mt-4 p-4 bg-base-300 rounded-lg">
@@ -62,6 +64,12 @@
 
         <script>
             //@ts-nocheck
+
+
+
+
+
+
 
             async function generateSVG(prompt) {
                 console.log("Generating SVG for prompt:", prompt);
@@ -96,6 +104,39 @@
             if (generateButton) {
                 generateButton.addEventListener("click", handleSubmit);
             }
-        </script>
-    </body>
-</html>
+
+            /*code pour pocketbase*/
+async function saveSVG() {
+    const name = document.getElementById("svg-name").value;
+    const svgOutput = document.getElementById("svg-output").textContent;
+
+    if (!name || !svgOutput) {
+        alert("Donnez un nom et générez un SVG d'abord !");
+        return;
+    }
+
+    try {
+      
+        const record = await pb.collection("svgs").create({
+            name: name,
+            code: svgOutput
+        });
+
+        console.log("SVG enregistré:", record);
+        alert("SVG enregistré avec succès !");
+        document.getElementById("svg-name").value = "";
+    } catch (err) {
+        console.error("Erreur lors de l'enregistrement:", err);
+        alert("Erreur lors de l'enregistrement.");
+    }
+}
+
+const saveButton = document.getElementById("save-button");
+if (saveButton) {
+    saveButton.addEventListener("click", saveSVG);
+}
+
+
+
+
+</Layout>
