@@ -1,97 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layout à deux colonnes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
-</head>
-<body class="bg-base-100 p-4">
-    <div class="container mx-auto">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Layout à deux colonnes</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css"
+            rel="stylesheet"
+            type="text/css"
+        />
+    </head>
+    <body class="bg-base-100 p-4">
+        <div class="container mx-auto">
+            <!-- Layout principal avec deux colonnes -->
+            <div class="flex flex-col lg:flex-row gap-6 min-h-screen">
 
 
-        <!-- Layout principal avec deux colonnes -->
-        <div class="flex flex-col lg:flex-row gap-6 min-h-screen">
-            
-            <!-- Colonne de gauche -->
-            <div class="flex-1 bg-base-200 rounded-lg p-6">
-                <h2 class="text-2xl font-bold mb-4"></h2>
-                <p class="text-base-content/70 mb-4">
-                 
-                </p>
-                <div class="bg-primary/10 p-4 rounded-lg">
-                    <p>Zone de contenu principal gauche</p>
+                <!-- Colonne de gauche -->
+                <div id="svg-container" class="flex-1  rounded-lg p-6 bg-secondary-content">
+                    <h2 class="text-2xl font-bold mb-4"></h2>
+                    <p class="text-base-content/70 mb-4"></p>
+                    <div class=" p-4 rounded-lg">
+                     
+                    </div>
+                </div>
+
+                <!-- Colonne de droite -->
+                <div id="svg-output"
+                class="flex-1  rounded-lg p-6 bg-secondary-content">
+                    <h2 class="text-2xl font-bold mb-4"></h2>
+                    <p class="text-base-content/70 mb-4"></p>
+                    <div class=" p-4 rounded-lg">
+                   
+                    </div>
                 </div>
             </div>
-            
-            <!-- Colonne de droite -->
-            <div class="flex-1 bg-base-200 rounded-lg p-6">
-                <h2 class="text-2xl font-bold mb-4"></h2>
-                <p class="text-base-content/70 mb-4">
-                  
-                </p>
-                <div class="bg-secondary/10 p-4 rounded-lg">
-                    <p>Zone de contenu principal droite</p>
+
+            <div class="mt-6 bg-base-200 rounded-lg p-4">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input
+                        id="user-prompt"
+                        type="text"
+                        placeholder="Tapez votre prompt ici..."
+                        class="input input-bordered w-full"
+                    />
+                    <button
+                        id="generate-button"
+                        class="btn btn-soft btn-secondary w-full sm:w-auto"
+                        >Generate</button
+                    >
                 </div>
             </div>
-            
-        </div>
-        
-     
-        <div class="mt-6 bg-base-200 rounded-lg p-4">
-            
-            <div class="flex flex-col sm:flex-row gap-2">
-                <input id="user-prompt" type="text" placeholder="Tapez votre prompt ici..." class="input input-bordered w-full"/>
-                <button  id="generate-button" class="btn btn-primary w-full sm:w-auto">Generate</button >
+            <!-- <div id="svg-container" class="mt-4 p-4 bg-base-300 rounded-lg">
             </div>
+            <pre id="svg-output" class="mt-2 bg-base-100 p-2 rounded"></pre> -->
         </div>
-         <div id="svg-container" class="mt-4 p-4 bg-base-300 rounded-lg"></div>
-<pre id="svg-output" class="mt-2 bg-base-100 p-2 rounded"></pre> 
-    </div> 
 
-    <script>
-    //@ts-nocheck
-	
-	async function generateSVG(prompt) {
-		console.log('Generating SVG for prompt:', prompt);
-		const res = await fetch('/api/generateSVG', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ prompt }),
-		});
-		const data = await res.json();
-		return data.svg;
-	}
+        <script>
+            //@ts-nocheck
 
-	async function handleSubmit() {
-        let prompt = "";
-        let svgCode = "";
-        const promptElement = document.getElementById("user-prompt");
-        prompt = promptElement ? promptElement.value : "";
-        console.log('submitted: ', prompt); // message affiché sur votre console d'inspecteur dans le navigateur
-        const svgContainer = document.getElementById("svg-container");
-        let svgOutput = document.getElementById("svg-output");
+            async function generateSVG(prompt) {
+                console.log("Generating SVG for prompt:", prompt);
+                const res = await fetch("/api/generateSVG", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt }),
+                });
+                const data = await res.json();
+                return data.svg;
+            }
 
+            async function handleSubmit() {
+                let prompt = "";
+                let svgCode = "";
+                const promptElement = document.getElementById("user-prompt");
+                prompt = promptElement ? promptElement.value : "";
+                console.log("submitted: ", prompt); // message affiché sur votre console d'inspecteur dans le navigateur
+                const svgContainer = document.getElementById("svg-container");
+                let svgOutput = document.getElementById("svg-output");
 
+                svgContainer.innerHTML = `<span class="loading loading-ring loading-xl"></span>`;
+                generateButton.disabled = true;
 
-svgContainer.innerHTML = `<span class="loading loading-ring loading-xl"></span>`;
-generateButton.disabled = true;
-
-
-
-
-        svgCode = await generateSVG(prompt);
-        console.log('svgCode: ', svgCode);
-        svgOutput.textContent = svgCode;
-        svgContainer.innerHTML = svgCode;
-        generateButton.disabled = false;
-
-	}
-    const generateButton = document.getElementById("generate-button");
-	if (generateButton) {
-		generateButton.addEventListener("click", handleSubmit);
-	}
-</script>
-</body>
+                svgCode = await generateSVG(prompt);
+                console.log("svgCode: ", svgCode);
+                svgOutput.textContent = svgCode;
+                svgContainer.innerHTML = svgCode;
+                generateButton.disabled = false;
+            }
+            const generateButton = document.getElementById("generate-button");
+            if (generateButton) {
+                generateButton.addEventListener("click", handleSubmit);
+            }
+        </script>
+    </body>
 </html>
