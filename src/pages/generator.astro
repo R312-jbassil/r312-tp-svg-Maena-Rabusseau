@@ -40,12 +40,58 @@
         
      
         <div class="mt-6 bg-base-200 rounded-lg p-4">
+            
             <div class="flex flex-col sm:flex-row gap-2">
-                <input type="text" placeholder="Tapez votre prompt ici..." class="input input-bordered w-full"/>
-                <button class="btn btn-primary w-full sm:w-auto">Generate</button>
+                <input id="user-prompt" type="text" placeholder="Tapez votre prompt ici..." class="input input-bordered w-full"/>
+                <button  id="generate-button" class="btn btn-primary w-full sm:w-auto">Generate</button >
             </div>
         </div>
-        
-    </div>
+         <div id="svg-container" class="mt-4 p-4 bg-base-300 rounded-lg"></div>
+<pre id="svg-output" class="mt-2 bg-base-100 p-2 rounded"></pre> 
+    </div> 
+
+    <script>
+    //@ts-nocheck
+	
+	async function generateSVG(prompt) {
+		console.log('Generating SVG for prompt:', prompt);
+		const res = await fetch('/api/generateSVG', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ prompt }),
+		});
+		const data = await res.json();
+		return data.svg;
+	}
+
+	async function handleSubmit() {
+        let prompt = "";
+        let svgCode = "";
+        const promptElement = document.getElementById("user-prompt");
+        prompt = promptElement ? promptElement.value : "";
+        console.log('submitted: ', prompt); // message affiché sur votre console d'inspecteur dans le navigateur
+        const svgContainer = document.getElementById("svg-container");
+        let svgOutput = document.getElementById("svg-output");
+
+
+
+svgContainer.innerHTML = `<span class="loading loading-ring loading-xl"></span>`;
+generateButton.disabled = true;
+
+
+
+
+        svgCode = await generateSVG(prompt);
+        console.log('svgCode: ', svgCode);
+        svgOutput.textContent = svgCode;
+        svgContainer.innerHTML = svgCode;
+        generateButton.disabled = false;
+
+	}
+    const generateButton = document.getElementById("generate-button");
+	if (generateButton) {
+		generateButton.addEventListener("click", handleSubmit);
+	}
+</script>
 </body>
 </html>
