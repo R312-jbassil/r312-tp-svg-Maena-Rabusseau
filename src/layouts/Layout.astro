@@ -16,5 +16,43 @@ import "../styles/global.css";
 				<slot />
 			</div>
 		</div>
+
+		---
+// Layout.astro
+---
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deux colonnes - Layout</title>
+  </head>
+  <body class="min-h-screen bg-base-200 flex items-center justify-center">
+    <div class="w-full max-w-6xl bg-white rounded-xl shadow-lg p-6">
+      
+      <!-- Container principal divisé en 2 -->
+      <div class="flex flex-col md:flex-row gap-6">
+        
+        <!-- Partie gauche -->
+        <div class="flex-1 flex items-center justify-center border-4 border-purple-500 rounded-lg bg-gradient-to-b from-gray-50 to-gray-200 p-6">
+          <slot name="left" />
+        </div>
+        
+        <!-- Partie droite -->
+        <div class="flex-1 bg-black text-green-200 font-mono p-6 rounded-lg overflow-auto text-sm">
+          <slot name="right" />
+        </div>
+      </div>
+
+      <!-- Barre du bas -->
+      <div class="mt-6 flex flex-col sm:flex-row gap-3">
+        <input type="text" placeholder="car" class="input input-bordered w-full"/>
+        <button class="btn btn-primary w-full sm:w-auto">Generate</button>
+      </div>
+    </div>
+  </body>
+</html>
+
 	</body>
 </html>
+
+

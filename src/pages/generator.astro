@@ -1,7 +1,51 @@
-<div>
-<textarea class="textarea" placeholder="Bio"></textarea>
-<textarea placeholder="Bio" class="textarea textarea-xl"></textarea>
-<button class="btn btn-outline btn-secondary">Secondary</button>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout à deux colonnes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="bg-base-100 p-4">
+    <div class="container mx-auto">
 
 
-</div>
+        <!-- Layout principal avec deux colonnes -->
+        <div class="flex flex-col lg:flex-row gap-6 min-h-screen">
+            
+            <!-- Colonne de gauche -->
+            <div class="flex-1 bg-base-200 rounded-lg p-6">
+                <h2 class="text-2xl font-bold mb-4"></h2>
+                <p class="text-base-content/70 mb-4">
+                 
+                </p>
+                <div class="bg-primary/10 p-4 rounded-lg">
+                    <p>Zone de contenu principal gauche</p>
+                </div>
+            </div>
+            
+            <!-- Colonne de droite -->
+            <div class="flex-1 bg-base-200 rounded-lg p-6">
+                <h2 class="text-2xl font-bold mb-4"></h2>
+                <p class="text-base-content/70 mb-4">
+                  
+                </p>
+                <div class="bg-secondary/10 p-4 rounded-lg">
+                    <p>Zone de contenu principal droite</p>
+                </div>
+            </div>
+            
+        </div>
+        
+     
+        <div class="mt-6 bg-base-200 rounded-lg p-4">
+            <div class="flex flex-col sm:flex-row gap-2">
+                <input type="text" placeholder="Tapez votre prompt ici..." class="input input-bordered w-full"/>
+                <button class="btn btn-primary w-full sm:w-auto">Generate</button>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
