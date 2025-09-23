@@ -65,13 +65,15 @@ import Layout from "../layouts/Layout.astro";
 
 <script>
     //@ts-nocheck
-
+    let promptList = [];
+    const generateButton = document.getElementById("generate-button");
+    const editButton = document.getElementById("edit-button");
     async function generateSVG(prompt) {
         console.log("Generating SVG for prompt:", prompt);
         const res = await fetch("/api/generateSVG", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt }),
+            body: JSON.stringify( prompt ),
         });
         const data = await res.json();
         return data.svg;
@@ -82,51 +84,63 @@ import Layout from "../layouts/Layout.astro";
         let svgCode = "";
         const promptElement = document.getElementById("user-prompt");
         prompt = promptElement ? promptElement.value : "";
-        console.log("submitted: ", prompt); // message affiché sur votre console d'inspecteur dans le navigateur
+        console.log("submitted: ", prompt);
+
+        promptList.length = 0;
+        promptList.push({ role: "user", content: prompt });
+
+        // message affiché sur votre console d'inspecteur dans le navigateur
         const svgContainer = document.getElementById("svg-container");
-        let svgOutput = document.getElementById("svg-output");
 
         svgContainer.innerHTML = `<span class="loading loading-ring loading-xl"></span>`;
         generateButton.disabled = true;
+        // editButton.disabled = true;
 
-        svgCode = await generateSVG(prompt);
-        console.log("svgCode: ", svgCode);
-        svgOutput.textContent = svgCode;
-        svgContainer.innerHTML = svgCode;
+        let svgOutput = document.getElementById("svg-output");
+
+        let aiResponse = await generateSVG(promptList);
+
+        const svgMatch = aiResponse.content.match(/<svg[\s\S]*?<\/svg>/i);
+        aiResponse.content = svgMatch ? svgMatch[0] : "";
+        console.log("svgCode: ", aiResponse.content);
+
+        promptList.push(aiResponse);
+
+        svgOutput.textContent = aiResponse.content;
+        svgContainer.innerHTML = aiResponse.content;
         generateButton.disabled = false;
+        // editButton.disabled = false;
     }
-    const generateButton = document.getElementById("generate-button");
     if (generateButton) {
         generateButton.addEventListener("click", handleSubmit);
     }
-
     /*code pour pocketbase*/
-    async function saveSVG() {
-        const name = document.getElementById("svg-name").value;
-        const svgOutput = document.getElementById("svg-output").textContent;
+    // async function saveSVG() {
+    //     const name = document.getElementById("svg-name").value;
+    //     const svgOutput = document.getElementById("svg-output").textContent;
 
-        if (!name || !svgOutput) {
-            alert("Donnez un nom et générez un SVG d'abord !");
-            return;
-        }
+    //     if (!name || !svgOutput) {
+    //         alert("Donnez un nom et générez un SVG d'abord !");
+    //         return;
+    //     }
 
-        try {
-            const record = await pb.collection("svgs").create({
-                name: name,
-                code: svgOutput,
-            });
+    //     try {
+    //         const record = await pb.collection("svgs").create({
+    //             name: name,
+    //             code: svgOutput,
+    //         });
 
-            console.log("SVG enregistré:", record);
-            alert("SVG enregistré avec succès !");
-            document.getElementById("svg-name").value = "";
-        } catch (err) {
-            console.error("Erreur lors de l'enregistrement:", err);
-            alert("Erreur lors de l'enregistrement.");
-        }
-    }
+    //         console.log("SVG enregistré:", record);
+    //         alert("SVG enregistré avec succès !");
+    //         document.getElementById("svg-name").value = "";
+    //     } catch (err) {
+    //         console.error("Erreur lors de l'enregistrement:", err);
+    //         alert("Erreur lors de l'enregistrement.");
+    //     }
+    // }
 
     const saveButton = document.getElementById("save-button");
-    if (saveButton) {
-        saveButton.addEventListener("click", saveSVG);
-    }
+    // if (saveButton) {
+    //     saveButton.addEventListener("click", saveSVG);
+    // }
 </script>
