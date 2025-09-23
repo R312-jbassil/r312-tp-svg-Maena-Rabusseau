@@ -1,10 +1,10 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 // import pb from "../../utils/pb";
-import { Collections, type SvgRecord } from "../../utils/pocketbase-types";
+// import { Collections, type SvgRecord } from "../../utils/pocketbase-types";
 
 const id = Astro.params.id;
-const svg: SvgRecord = await pb.collection(Collections.Svg).getOne(id);
+// const svg: SvgRecord = await pb.collection(Collections.Svg).getOne(id);
 ---
 
 <Layout />
@@ -74,5 +74,13 @@ const svg: SvgRecord = await pb.collection(Collections.Svg).getOne(id);
     }
 </div>
 
+<form id="input-prompt-form" class="flex flex-col gap-2 w-full absolute bottom-0 left-0 right-0 bg-base-300 p-4" method="POST" autocomplete="off" >
+    <input type="hidden" name="history" value={JSON.stringify(svg?.chat_history)} />
+    <input type="hidden" name="id" value={svg?.id} />
+    <div class="flex items-center gap-2">
+        <input id="prompt-input" name="editPrompt" type="text" class="input flex-grow" placeholder="Enter a prompt to edit the SVG..." />
+        <button class="btn btn-primary" type="submit">Edit</button>
+    </div>
+</form>
 
 <Layout />
