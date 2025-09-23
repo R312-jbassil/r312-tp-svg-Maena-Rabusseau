@@ -1,10 +1,13 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-// import pb from "../../utils/pb";
-// import { Collections, type SvgRecord } from "../../utils/pocketbase-types";
+import pb from "../utils/pb";
+import { Collections, type SvgRecord } from "../utils/pocketbase-types";
+
 
 const id = Astro.params.id;
-// const svg: SvgRecord = await pb.collection(Collections.Svg).getOne(id);
+console.log("Astro.params.id =", id);
+const svg: SvgRecord = await pb.collection(Collections.Svg).getOne(id);
+
 ---
 
 <Layout />
@@ -82,5 +85,64 @@ const id = Astro.params.id;
         <button class="btn btn-primary" type="submit">Edit</button>
     </div>
 </form>
+
+
+
+
+<script>
+    //@ts-nocheck
+    const form = document.getElementById('...');
+    const svgPreview = document.getElementById('...');
+    const chatHistory = document.getElementById('...');
+
+    // Fonction pour générer le SVG à partir du prompt
+    async function generateSVG(prompt) {
+        ...
+    }
+
+    // Écouteur d'événement pour le formulaire de soumission
+    form?.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Empêche le rechargement de la page
+        const formData = new FormData(form);
+        console.log(JSON.stringify(Object.fromEntries(formData)));
+
+        // Créez un objet pour le prompt de l'utilisateur
+        let prompt = {
+            role: 'user',
+            content: formData.get('editPrompt')
+        };
+
+        // Récupérez l'historique des messages
+        let history = JSON.parse(formData.get('history'));
+        history.push(...); // Ajoutez le nouveau prompt à l'historique
+
+        // Réinitialisez le champ de saisie
+        document.getElementById('prompt-input').value = '';
+
+        // Affichez un indicateur de chargement
+        svgPreview.innerHTML += `<span class="loading loading-ring loading-xl"></span>`;
+        
+        // Ajoutez le prompt à l'historique du chat
+        chatHistory.innerHTML += `...`;
+
+        // Appelez la fonction pour générer le SVG
+        let aiResponse = await generateSVG(prompt);
+        history.push({ role: 'assistant', content: aiResponse }); // Ajoutez la réponse de l'IA à l'historique
+
+        // Extraire le SVG de la réponse
+        const svgMatch = aiResponse.match(/<svg[\s\S]*?<\/svg>/i);
+        aiResponse = svgMatch ? svgMatch[0] : "";
+
+        console.log("svgCode: ", aiResponse);
+         // Mettez à jour l'affichage du SVG
+        svgPreview. ... = ...;
+
+        // Ajoutez le code SVG à l'historique du chat
+        chatHistory.innerHTML += `...`;
+
+        form.reset(); // Réinitialisez le formulaire
+    });
+</script>
+
 
 <Layout />

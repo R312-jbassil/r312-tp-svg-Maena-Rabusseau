@@ -1,0 +1,52 @@
+---
+import pb from "../utils/pb";
+import { Collections, type SvgRecord } from "../utils/pocketbase-types";
+
+const svgs = await pb.collection(Collections.Svg).getFullList(200, {
+    sort: "-created",
+});
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout>
+    <div class="container mx-auto">
+        <!-- <div>
+            <a href="../gallery/" class="btn btn-secondary">Galerie SVG</a>
+        </div> -->
+
+        <!-- Layout principal  -->
+        <div class="flex w-full min-h-screen">
+            <!-- Colonne de gauche -->
+            <div
+                id="svg-container"
+                class="card bg-secondary-content rounded-lg p-6 flex-1"
+            >
+                <h2 class="text-2xl font-bold mb-4">SVG Gallery</h2>
+                <p class="text-base-content/70 mb-4">
+                    Browse and manage your SVGs
+                </p>
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                >
+                    {
+                        svgs.map((svg) => (
+                            <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow duration-300">
+                                <div class="card-body">
+                                    <h3 class="card-title text-lg font-semibold">
+                                        {svg.name}
+                                    </h3>
+                                    <div class="overflow-hidden rounded mb-4">
+                                        <div class="w-full h-48 flex items-center justify-center bg-gray-100" set:html={svg?.code_svg}>
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="btn btn-soft btn-secondary w-full sm:w-auto" href={`gallery/${svg.id}`}>Edit</a>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>
