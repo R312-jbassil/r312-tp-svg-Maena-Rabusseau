@@ -98,7 +98,7 @@ import Layout from "../layouts/Layout.astro";
         return data.svg;
     }
 
-    const editButton1 = document.getElementById("edit-button");
+    // const editButton1 = document.getElementById("edit-button");
 
     async function handleEdit() {
         let prompt = "";
@@ -131,8 +131,8 @@ import Layout from "../layouts/Layout.astro";
         console.log("Historique des prompts : ", promptList);
     }
 
-    if (editButton1) {
-        editButton1.addEventListener("click", handleEdit);
+    if (editButton) {
+        editButton.addEventListener("click", handleEdit);
     }
 
     // const saveButton = document.getElementById("save-button");
