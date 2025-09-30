@@ -1,6 +1,6 @@
 ---
-import pb from "../utils/pb";
-import { Collections, type SvgRecord } from "../utils/pocketbase-types";
+import pb from "../../utils/pb";
+import { Collections, type SvgRecord } from "../../utils/pocketbase-types";
 
 const svgs = await pb.collection(Collections.Svg).getFullList(200, {
     sort: "-created",
@@ -41,7 +41,8 @@ import Layout from "../../layouts/Layout.astro";
                                         </div>
                                     </div>
                                 </div>
-                                <a class="btn btn-soft btn-secondary w-full sm:w-auto" href={`gallery/${svg.id}`}>Edit</a>
+                                <a class="btn btn-soft btn-secondary w-full sm:w-auto" href={`/gallery/${svg.id}`}>Edit</a>
+
                             </div>
                         ))
                     }

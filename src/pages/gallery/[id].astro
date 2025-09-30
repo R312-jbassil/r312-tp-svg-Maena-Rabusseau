@@ -1,12 +1,15 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import pb from "../utils/pb";
-import { Collections, type SvgRecord } from "../utils/pocketbase-types";
+import pb from "../../utils/pb";
+import { Collections, type SvgRecord } from "../../utils/pocketbase-types";
 
 
 const id = Astro.params.id;
 console.log("Astro.params.id =", id);
 const svg: SvgRecord = await pb.collection(Collections.Svg).getOne(id);
+
+
+
 
 ---
 
@@ -97,7 +100,7 @@ const svg: SvgRecord = await pb.collection(Collections.Svg).getOne(id);
 
     // Fonction pour générer le SVG à partir du prompt
     async function generateSVG(prompt) {
-        ...
+        
     }
 
     // Écouteur d'événement pour le formulaire de soumission
@@ -114,13 +117,13 @@ const svg: SvgRecord = await pb.collection(Collections.Svg).getOne(id);
 
         // Récupérez l'historique des messages
         let history = JSON.parse(formData.get('history'));
-        history.push(...); // Ajoutez le nouveau prompt à l'historique
+        history.push(prompt); // Ajoutez le nouveau prompt à l'historique
 
         // Réinitialisez le champ de saisie
         document.getElementById('prompt-input').value = '';
 
         // Affichez un indicateur de chargement
-        svgPreview.innerHTML += `<span class="loading loading-ring loading-xl"></span>`;
+        svgPreview.innerHTML = aiResponse `<span class="loading loading-ring loading-xl"></span>`;
         
         // Ajoutez le prompt à l'historique du chat
         chatHistory.innerHTML += `...`;
@@ -135,7 +138,7 @@ const svg: SvgRecord = await pb.collection(Collections.Svg).getOne(id);
 
         console.log("svgCode: ", aiResponse);
          // Mettez à jour l'affichage du SVG
-        svgPreview. ... = ...;
+        svgPreview.innerHTML = aiResponse;
 
         // Ajoutez le code SVG à l'historique du chat
         chatHistory.innerHTML += `...`;
