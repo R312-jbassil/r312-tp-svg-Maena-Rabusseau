@@ -8,6 +8,11 @@ const id = Astro.params.id;
 console.log("Astro.params.id =", id);
 const svg: SvgRecord = await pb.collection(Collections.Svg).getOne(id);
 svg.chat_history = JSON.parse(svg.chat_history) || [];
+
+
+
+const locale = Astro.locals.lang as 'en' | 'fr' ?? 'en';
+console.log('Locale in index:', locale);
 ---
 
 <Layout>
