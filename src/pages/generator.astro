@@ -1,25 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro";
-
+import { ui } from "../i18n/ui.js";
 
 const locale = Astro.locals.lang as 'en' | 'fr' ?? 'en';
-console.log('Locale in index:', locale);
+console.log('Locale in generator:', locale);
 ---
 
-<Layout>
+<Layout title={ui[locale].generator.title}>
     <div class="container mx-auto">
-                       <nav>
-                    <a href="/" class="btn btn-secondary"
-                        >Home</a
-                    >
-
-                    <a href="/generator" class="btn btn-secondary"
-                        >Generator</a
-                    >
-                    <a href="../gallery/" class="btn btn-secondary"
-                        >Galerie SVG</a
-                    >
-                </nav>
 
         <!-- Layout principal  -->
         <div class="flex w-full min-h-screen">
@@ -28,8 +16,8 @@ console.log('Locale in index:', locale);
                 id="svg-container"
                 class="card bg-secondary-content rounded-lg p-6 flex-1"
             >
-                <h2 class="text-2xl font-bold mb-4">SVG </h2>
-                <p class="text-base-content/70 mb-4"></p>
+                <h2 class="text-2xl font-bold mb-4">{ui[locale].generator.previewTitle}</h2>
+                <p class="text-base-content/70 mb-4">{ui[locale].generator.contentPlaceholder}</p>
               
             </div>
 
@@ -40,7 +28,7 @@ console.log('Locale in index:', locale);
                 id="svg-output"
                 class="card bg-secondary-content rounded-lg p-6 flex-1"
             >
-                <h2 class="text-2xl font-bold mb-4">Conversation</h2>
+                <h2 class="text-2xl font-bold mb-4">{ui[locale].generator.conversationTitle}</h2>
                 <p class="text-base-content/70 mb-4"></p>
              
             </div>
@@ -51,7 +39,7 @@ console.log('Locale in index:', locale);
                 <input
                     id="user-prompt"
                     type="text"
-                    placeholder="Tapez votre prompt ici..."
+                    placeholder={locale === 'fr' ? 'Tapez votre prompt ici...' : 'Type your prompt here...'}
                     class="input input-bordered w-full"
                 />
             </div>
@@ -59,19 +47,19 @@ console.log('Locale in index:', locale);
 
         <button
             id="generate-button"
-            class="btn btn-soft btn-secondary w-full sm:w-auto">Generate</button
+            class="btn btn-soft btn-secondary w-full sm:w-auto">{ui[locale].generator.generateButton}</button
         >
         <input
             id="svg-name"
             type="text"
-            placeholder="Nom du SVG..."
+            placeholder={ui[locale].generator.svgNamePlaceholder}
             class="input input-bordered w-full sm:w-auto"
         />
         <button id="save-button" class="btn btn-secondary w-full sm:w-auto"
-            >Sauvegarder</button
+            >{ui[locale].generator.saveButton}</button
         >
 
-        <button class="btn btn-secondary m-2" id="edit-button">Edit</button>
+        <button class="btn btn-secondary m-2" id="edit-button">{ui[locale].generator.editButton}</button>
     </div>
 
     <div
@@ -184,7 +172,7 @@ console.log('Locale in index:', locale);
     if (saveButton) {
         saveButton.addEventListener("click", async () => {
             // Demande du nom du SVG à l'utilisateur
-            const name = prompt("Donnez un nom à votre création :");
+            const name = prompt("{ui[locale].generator.savePrompt}");
             const svgOutput =
                 document.getElementById("svg-output")?.textContent;
             console.log(
@@ -202,9 +190,9 @@ console.log('Locale in index:', locale);
             // Sauvegarde et gestion de la réponse
             const result = await saveSVG(params);
             if (result.success) {
-                alert("SVG sauvegardé avec succès !");
+                alert("{ui[locale].generator.saveSuccess}");
             } else {
-                alert("Erreur lors de la sauvegarde : " + result.error);
+                alert("{ui[locale].generator.saveError}" + result.error);
             }
         });
     }
