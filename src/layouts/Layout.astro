@@ -3,7 +3,7 @@ import "../styles/global.css";
 
 import { ui } from "../i18n/ui.js";
 
-const locale = Astro.locals.lang as 'en' | 'fr' ?? 'en';
+const locale = (Astro.locals.lang as "en" | "fr") ?? "en";
 const { title } = Astro.props;
 
 interface Props {
@@ -24,13 +24,21 @@ interface Props {
         <div class="h-full flex flex-col min-h-0">
             <header class="navbar bg-base-200">
                 <div class="navbar-start">
-                    <a href="/" class="btn btn-ghost text-xl">{ui[locale].nav.home}</a>
+                    <a href="/" class="btn btn-ghost text-xl"
+                        >{ui[locale].nav.home}</a
+                    >
                 </div>
                 <div class="navbar-center">
                     <div class="menu menu-horizontal px-1">
-                        <a href="/" class="btn btn-ghost">{ui[locale].nav.home}</a>
-                        <a href="/generator" class="btn btn-ghost">{ui[locale].nav.generator}</a>
-                        <a href="/gallery" class="btn btn-ghost">{ui[locale].nav.gallery}</a>
+                        <a href="/" class="btn btn-ghost"
+                            >{ui[locale].nav.home}</a
+                        >
+                        <a href="/generator" class="btn btn-ghost"
+                            >{ui[locale].nav.generator}</a
+                        >
+                        <a href="/gallery" class="btn btn-ghost"
+                            >{ui[locale].nav.gallery}</a
+                        >
                     </div>
                 </div>
                 <div class="navbar-end">
@@ -40,12 +48,22 @@ interface Props {
                             class="select select-bordered"
                             onchange="this.form.submit()"
                         >
-                            <option disabled selected="true">{ui[locale].nav.language}</option>
-                            <option value="en" selected={locale === 'en'}>English</option>
-                            <option value="fr" selected={locale === 'fr'}>Français</option>
+                            <option disabled selected="true"
+                                >{ui[locale].nav.language}</option
+                            >
+                            <option value="en" selected={locale === "en"}
+                                >English</option
+                            >
+                            <option value="fr" selected={locale === "fr"}
+                                >Français</option
+                            >
                         </select>
                     </form>
                 </div>
+                <form method="POST" action="/api/logout" class="m-0 p-0 ml-4">
+                    <button type="submit" class="btn btn-primary">Logout</button
+                    >
+                </form>
             </header>
             <div class="flex-1 min-h-0">
                 <slot />
