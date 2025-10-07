@@ -1,6 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { ui } from "../i18n/ui.js";
+const user = Astro.locals.user;
+
 
 const locale = Astro.locals.lang as 'en' | 'fr' ?? 'en';
 console.log('Locale in index:', locale);
@@ -18,4 +20,6 @@ console.log('Locale in index:', locale);
     </p>
     <a href="/generator" class="btn btn-secondary">{ui[locale].index.button}</a>
   </div>
+
+  
 </Layout>

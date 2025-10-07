@@ -1,15 +1,27 @@
 ---
 import pb from "../../utils/pb";
 import { Collections, type SvgRecord } from "../../utils/pocketbase-types";
-
-const svgs = await pb.collection(Collections.Svg).getFullList(200, {
-    sort: "-created",
-});
 import Layout from "../../layouts/Layout.astro";
 import { ui } from "../../i18n/ui.js";
 
+const user = Astro.locals.user;
 const locale = Astro.locals.lang as 'en' | 'fr' ?? 'en';
+console.log('User in gallery:', user);
+
 console.log('Locale in gallery:', locale);
+console.log('User in gallery:', user);
+
+let svgs = [];
+if (user?.id) {
+
+  svgs = await pb.collection(Collections.Svg).getFullList({
+    sort: "-created",
+    filter: `createur = "${user.id}"` 
+  });
+} else {
+  // Si pas d'utilisateur connecté, ne pas afficher de SVG
+  svgs = [];
+}
 ---
 
 <Layout title={ui[locale].gallery.title}>
@@ -22,9 +34,22 @@ console.log('Locale in gallery:', locale);
                 class="card bg-secondary-content rounded-lg p-6 flex-1"
             >
                 <h2 class="text-2xl font-bold mb-4">{ui[locale].gallery.title}</h2>
-                <p class="text-base-content/70 mb-4">
-                  
-                </p>
+                
+                {!user ? (
+                    <div class="text-center p-8">
+                        <p class="text-lg text-warning">{ui[locale].gallery.notLoggedIn}</p>
+                        <a href="/login" class="btn btn-primary mt-4">
+                            {locale === 'fr' ? 'Se connecter' : 'Login'}
+                        </a>
+                    </div>
+                ) : svgs.length === 0 ? (
+                    <div class="text-center p-8">
+                        <p class="text-lg text-base-content/70">{ui[locale].gallery.noSvgs}</p>
+                        <a href="/generator" class="btn btn-primary mt-4">
+                            {locale === 'fr' ? 'Créer un SVG' : 'Create SVG'}
+                        </a>
+                    </div>
+                ) : (
                 <div
                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
                 >
@@ -47,6 +72,7 @@ console.log('Locale in gallery:', locale);
                         ))
                     }
                 </div>
+                )}
             </div>
         </div>
     </div>

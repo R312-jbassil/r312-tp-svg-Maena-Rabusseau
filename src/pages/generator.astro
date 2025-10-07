@@ -1,6 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { ui } from "../i18n/ui.js";
+const user = Astro.locals.user;
+
 
 const locale = Astro.locals.lang as 'en' | 'fr' ?? 'en';
 console.log('Locale in generator:', locale);
@@ -72,6 +74,8 @@ console.log('Locale in generator:', locale);
      </script>
       
     </div>
+
+    
 </Layout>
 
 
@@ -171,28 +175,36 @@ console.log('Locale in generator:', locale);
     // Gestionnaire d'événements pour le bouton de sauvegarde
     if (saveButton) {
         saveButton.addEventListener("click", async () => {
+         
+            const user = JSON.parse(localStorage.getItem("user") || "null");
+            
+            if (!user || !user.id) {
+                alert(locale === 'fr' ? "Vous devez être connecté pour sauvegarder un SVG" : "You must be logged in to save an SVG");
+                return;
+            }
+
             // Demande du nom du SVG à l'utilisateur
-            const name = prompt("{ui[locale].generator.savePrompt}");
-            const svgOutput =
-                document.getElementById("svg-output")?.textContent;
-            console.log(
-                "Préparation de la sauvegarde :",
-                JSON.stringify(svgOutput),
-            );
+            const name = prompt(locale === 'fr' ? "Donnez un nom à votre création :" : "Give a name to your creation:");
+            
+            if (!name) return; // L'utilisateur a annulé
+            
+            const svgOutput = document.getElementById("svg-output")?.textContent;
+            console.log("Préparation de la sauvegarde :", JSON.stringify(svgOutput));
 
             // Préparation des données pour la sauvegarde
             const params = {
                 nom: name,
                 code_svg: svgOutput || "<svg></svg>", // SVG par défaut si vide
                 chat_history: JSON.stringify(promptList), // Historique des échanges
+                user: user.id // Associer le SVG à l'utilisateur connecté
             };
 
             // Sauvegarde et gestion de la réponse
             const result = await saveSVG(params);
             if (result.success) {
-                alert("{ui[locale].generator.saveSuccess}");
+                alert(locale === 'fr' ? "SVG sauvegardé avec succès !" : "SVG saved successfully!");
             } else {
-                alert("{ui[locale].generator.saveError}" + result.error);
+                alert((locale === 'fr' ? "Erreur lors de la sauvegarde : " : "Error while saving: ") + result.error);
             }
         });
     }

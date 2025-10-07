@@ -1,0 +1,116 @@
+---
+import { Astro } from "astro";
+import Layout from "../layouts/Layout.astro";
+
+if (Astro.locals.user) {
+    // Si l'utilisateur est déjà connecté, on le redirige vers la page d'accueil
+    return Astro.redirect("/");
+}
+
+const user = Astro.locals.user;
+---
+    <Layout>
+
+        <title>Inscription</title>
+
+
+
+    <body class="min-h-screen flex items-center justify-center bg-base-200 ">
+        <div class="card w-full max-w-md shadow-xl bg-base-100">
+            <div class="card-body justify-center">
+                <h1 class="card-title text-3xl mb-4 justify-center">
+                    Créer un compte
+                </h1>
+
+                <!-- Formulaire d'inscription -->
+                <form id="signup-form" class="flex flex-col gap-4 justify-center">
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Nom d'utilisateur"
+                        required
+                        class="input input-bordered"
+                    />
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        required
+                        class="input input-bordered"
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Mot de passe"
+                        required
+                        minlength="8"
+                        class="input input-bordered"
+                    />
+                    <input
+                        type="password"
+                        name="passwordConfirm"
+                        placeholder="Confirmez le mot de passe"
+                        required
+                        minlength="8"
+                        class="input input-bordered"
+                    />
+
+                    <button type="submit" class="btn btn-primary w-full">
+                        S'inscrire
+                    </button>
+                </form>
+
+                <p class="text-center mt-2 text-sm">
+                    Déjà un compte ?
+                    <a href="/login" class="link link-primary">Connectez-vous</a>
+                </p>
+
+                <!-- Zone d'affichage du statut -->
+                <p id="status" class="mt-4 text-center text-error"></p>
+            </div>
+        </div>
+    </body>
+</html>
+
+
+<script>
+    //@ts-nocheck
+    localStorage.removeItem("user");
+    const form = document.getElementById("signup-form");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        status.textContent = ""; // Reset du message
+
+        const formData = new FormData(form);
+        const email = formData.get("email");
+        const password = formData.get("password");
+        const passwordConfirm = formData.get("passwordConfirm");
+        const name = formData.get("username");
+
+        // Vérifie que les deux mots de passe sont identiques
+        if (password !== passwordConfirm) {
+            status.textContent = "❌ Les mots de passe ne correspondent pas.";
+            return;
+        }
+
+        // Envoi des données à ton endpoint /api/signup
+        const res = await fetch("/api/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password, passwordConfirm, name }),
+            credentials: "include",
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            localStorage.setItem("user", JSON.stringify(data.user));
+            status.textContent = "✅ Inscription réussie ! Redirection...";
+            setTimeout(() => (window.location.href = "/"), 1000);
+        } else {
+            status.textContent = `❌ ${data.error || "Erreur lors de l'inscription"}`;
+        }
+    });
+</script>

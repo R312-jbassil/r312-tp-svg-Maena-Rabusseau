@@ -37,6 +37,8 @@ export const ui = {
         gallery: {
             title: 'SVG Gallery',
             viewDetails: 'View Details',
+            noSvgs: 'No SVG found. Create your first SVG with the generator!',
+            notLoggedIn: 'You must be logged in to view your SVG gallery.',
         }
     },
     fr: {
@@ -72,6 +74,8 @@ export const ui = {
         gallery: {
             title: 'Galerie SVG',
             viewDetails: 'Voir les détails',
+            noSvgs: 'Aucun SVG trouvé. Créez votre premier SVG avec le générateur !',
+            notLoggedIn: 'Vous devez être connecté pour voir votre galerie SVG.',
         }
     },
 
