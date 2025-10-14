@@ -3,25 +3,25 @@ import { Collections } from "../../utils/pocketbase-types";
 
 export const POST = async ({ request, cookies }) => {
 
-    
+
   const { email, password, passwordConfirm, name } = await request.json();
   console.log(email, password, passwordConfirm, name);
   try {
-//     const data = {
-//     "email": email,
-//     "emailVisibility": true,
-//     "name": name,
-//     "password": password,
-//     "passwordConfirm": passwordConfirm
-// };
-const data = {
-    "email": JSON.stringify(email).replace(/"/g, ''),
-    "emailVisibility": true,
-    "name": JSON.stringify(name).replace(/"/g, ''),
-    "password": JSON.stringify(password).replace(/"/g, ''),
-    "passwordConfirm": JSON.stringify(passwordConfirm).replace(/"/g, '')
-};
-console.log('data:', data);
+    //     const data = {
+    //     "email": email,
+    //     "emailVisibility": true,
+    //     "name": name,
+    //     "password": password,
+    //     "passwordConfirm": passwordConfirm
+    // };
+    const data = {
+      "email": JSON.stringify(email).replace(/"/g, ''),
+      "emailVisibility": true,
+      "name": JSON.stringify(name).replace(/"/g, ''),
+      "password": JSON.stringify(password).replace(/"/g, ''),
+      "passwordConfirm": JSON.stringify(passwordConfirm).replace(/"/g, '')
+    };
+    console.log('data:', data);
 
     const newUser = await pb.collection(Collections.Users).create(data);
 
@@ -29,12 +29,12 @@ console.log('data:', data);
     //   .collection(Collections.Users)
     //   .authWithPassword(email, password);
 
-    
+
     cookies.set("pb_auth", pb.authStore.exportToCookie(), {
       path: "/",
       httpOnly: true,
       sameSite: "strict",
-      expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), 
+      expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
     });
 
     return new Response(

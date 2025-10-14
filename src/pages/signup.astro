@@ -9,13 +9,11 @@ if (Astro.locals.user) {
 
 const user = Astro.locals.user;
 ---
-    <Layout>
 
-        <title>Inscription</title>
+<Layout>
+    <title>Inscription</title>
 
-
-
-    <body class="min-h-screen flex items-center justify-center bg-base-200 ">
+    <body class="min-h-screen flex items-center justify-center bg-base-200">
         <div class="card w-full max-w-md shadow-xl bg-base-100">
             <div class="card-body justify-center">
                 <h1 class="card-title text-3xl mb-4 justify-center">
@@ -23,7 +21,10 @@ const user = Astro.locals.user;
                 </h1>
 
                 <!-- Formulaire d'inscription -->
-                <form id="signup-form" class="flex flex-col gap-4 justify-center">
+                <form
+                    id="signup-form"
+                    class="flex flex-col gap-4 justify-center"
+                >
                     <input
                         type="text"
                         name="username"
@@ -62,7 +63,8 @@ const user = Astro.locals.user;
 
                 <p class="text-center mt-2 text-sm">
                     Déjà un compte ?
-                    <a href="/login" class="link link-primary">Connectez-vous</a>
+                    <a href="/login" class="link link-primary">Connectez-vous</a
+                    >
                 </p>
 
                 <!-- Zone d'affichage du statut -->
@@ -70,8 +72,7 @@ const user = Astro.locals.user;
             </div>
         </div>
     </body>
-</html>
-
+</Layout>
 
 <script>
     //@ts-nocheck

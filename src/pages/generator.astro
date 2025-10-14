@@ -3,14 +3,12 @@ import Layout from "../layouts/Layout.astro";
 import { ui } from "../i18n/ui.js";
 const user = Astro.locals.user;
 
-
-const locale = Astro.locals.lang as 'en' | 'fr' ?? 'en';
-console.log('Locale in generator:', locale);
+const locale = (Astro.locals.lang as "en" | "fr") ?? "en";
+console.log("Locale in generator:", locale);
 ---
 
 <Layout title={ui[locale].generator.title}>
     <div class="container mx-auto">
-
         <!-- Layout principal  -->
         <div class="flex w-full min-h-screen">
             <!-- Colonne de gauche -->
@@ -18,9 +16,12 @@ console.log('Locale in generator:', locale);
                 id="svg-container"
                 class="card bg-secondary-content rounded-lg p-6 flex-1"
             >
-                <h2 class="text-2xl font-bold mb-4">{ui[locale].generator.previewTitle}</h2>
-                <p class="text-base-content/70 mb-4">{ui[locale].generator.contentPlaceholder}</p>
-              
+                <h2 class="text-2xl font-bold mb-4">
+                    {ui[locale].generator.previewTitle}
+                </h2>
+                <p class="text-base-content/70 mb-4">
+                    {ui[locale].generator.contentPlaceholder}
+                </p>
             </div>
 
             <div class="divider divider-horizontal"></div>
@@ -30,9 +31,10 @@ console.log('Locale in generator:', locale);
                 id="svg-output"
                 class="card bg-secondary-content rounded-lg p-6 flex-1"
             >
-                <h2 class="text-2xl font-bold mb-4">{ui[locale].generator.conversationTitle}</h2>
+                <h2 class="text-2xl font-bold mb-4">
+                    {ui[locale].generator.conversationTitle}
+                </h2>
                 <p class="text-base-content/70 mb-4"></p>
-             
             </div>
         </div>
 
@@ -41,7 +43,9 @@ console.log('Locale in generator:', locale);
                 <input
                     id="user-prompt"
                     type="text"
-                    placeholder={locale === 'fr' ? 'Tapez votre prompt ici...' : 'Type your prompt here...'}
+                    placeholder={locale === "fr"
+                        ? "Tapez votre prompt ici..."
+                        : "Type your prompt here..."}
                     class="input input-bordered w-full"
                 />
             </div>
@@ -49,7 +53,8 @@ console.log('Locale in generator:', locale);
 
         <button
             id="generate-button"
-            class="btn btn-soft btn-secondary w-full sm:w-auto">{ui[locale].generator.generateButton}</button
+            class="btn btn-soft btn-secondary w-full sm:w-auto"
+            >{ui[locale].generator.generateButton}</button
         >
         <input
             id="svg-name"
@@ -61,25 +66,18 @@ console.log('Locale in generator:', locale);
             >{ui[locale].generator.saveButton}</button
         >
 
-        <button class="btn btn-secondary m-2" id="edit-button">{ui[locale].generator.editButton}</button>
+        <button class="btn btn-secondary m-2" id="edit-button"
+            >{ui[locale].generator.editButton}</button
+        >
     </div>
 
     <div
         id="chat-history"
         class="flex flex-col gap-4 w-full mb-20 overflow-y-auto flex-grow"
     >
-     <script>
-
-        
-     </script>
-      
+        <script></script>
     </div>
-
-    
 </Layout>
-
-
-
 
 <script>
     //@ts-nocheck
@@ -175,41 +173,56 @@ console.log('Locale in generator:', locale);
     // Gestionnaire d'événements pour le bouton de sauvegarde
     if (saveButton) {
         saveButton.addEventListener("click", async () => {
-         
             const user = JSON.parse(localStorage.getItem("user") || "null");
-            
+
             if (!user || !user.id) {
-                alert(locale === 'fr' ? "Vous devez être connecté pour sauvegarder un SVG" : "You must be logged in to save an SVG");
+                alert(
+                    locale === "fr"
+                        ? "Vous devez être connecté pour sauvegarder un SVG"
+                        : "You must be logged in to save an SVG",
+                );
                 return;
             }
 
             // Demande du nom du SVG à l'utilisateur
-            const name = prompt(locale === 'fr' ? "Donnez un nom à votre création :" : "Give a name to your creation:");
-            
+            const name = prompt(
+                locale === "fr"
+                    ? "Donnez un nom à votre création :"
+                    : "Give a name to your creation:",
+            );
+
             if (!name) return; // L'utilisateur a annulé
-            
-            const svgOutput = document.getElementById("svg-output")?.textContent;
-            console.log("Préparation de la sauvegarde :", JSON.stringify(svgOutput));
+
+            const svgOutput =
+                document.getElementById("svg-output")?.textContent;
+            console.log(
+                "Préparation de la sauvegarde :",
+                JSON.stringify(svgOutput),
+            );
 
             // Préparation des données pour la sauvegarde
             const params = {
                 nom: name,
                 code_svg: svgOutput || "<svg></svg>", // SVG par défaut si vide
                 chat_history: JSON.stringify(promptList), // Historique des échanges
-                user: user.id // Associer le SVG à l'utilisateur connecté
+                user: user.id, // Associer le SVG à l'utilisateur connecté
             };
 
             // Sauvegarde et gestion de la réponse
             const result = await saveSVG(params);
             if (result.success) {
-                alert(locale === 'fr' ? "SVG sauvegardé avec succès !" : "SVG saved successfully!");
+                alert(
+                    locale === "fr"
+                        ? "SVG sauvegardé avec succès !"
+                        : "SVG saved successfully!",
+                );
             } else {
-                alert((locale === 'fr' ? "Erreur lors de la sauvegarde : " : "Error while saving: ") + result.error);
+                alert(
+                    (locale === "fr"
+                        ? "Erreur lors de la sauvegarde : "
+                        : "Error while saving: ") + result.error,
+                );
             }
         });
     }
 </script>
-
-
-
-

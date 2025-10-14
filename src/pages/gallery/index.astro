@@ -5,22 +5,21 @@ import Layout from "../../layouts/Layout.astro";
 import { ui } from "../../i18n/ui.js";
 
 const user = Astro.locals.user;
-const locale = Astro.locals.lang as 'en' | 'fr' ?? 'en';
-console.log('User in gallery:', user);
+const locale = (Astro.locals.lang as "en" | "fr") ?? "en";
+console.log("User in gallery:", user);
 
-console.log('Locale in gallery:', locale);
-console.log('User in gallery:', user);
+console.log("Locale in gallery:", locale);
+console.log("User in gallery:", user);
 
 let svgs = [];
 if (user?.id) {
-
-  svgs = await pb.collection(Collections.Svg).getFullList({
-    sort: "-created",
-    filter: `createur = "${user.id}"` 
-  });
+    svgs = await pb.collection(Collections.Svg).getFullList({
+        sort: "-created",
+        filter: `createur = "${user.id}"`,
+    });
 } else {
-  // Si pas d'utilisateur connecté, ne pas afficher de SVG
-  svgs = [];
+    // Si pas d'utilisateur connecté, ne pas afficher de SVG
+    svgs = [];
 }
 ---
 
@@ -33,46 +32,57 @@ if (user?.id) {
                 id="svg-container"
                 class="card bg-secondary-content rounded-lg p-6 flex-1"
             >
-                <h2 class="text-2xl font-bold mb-4">{ui[locale].gallery.title}</h2>
-                
-                {!user ? (
-                    <div class="text-center p-8">
-                        <p class="text-lg text-warning">{ui[locale].gallery.notLoggedIn}</p>
-                        <a href="/login" class="btn btn-primary mt-4">
-                            {locale === 'fr' ? 'Se connecter' : 'Login'}
-                        </a>
-                    </div>
-                ) : svgs.length === 0 ? (
-                    <div class="text-center p-8">
-                        <p class="text-lg text-base-content/70">{ui[locale].gallery.noSvgs}</p>
-                        <a href="/generator" class="btn btn-primary mt-4">
-                            {locale === 'fr' ? 'Créer un SVG' : 'Create SVG'}
-                        </a>
-                    </div>
-                ) : (
-                <div
-                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-                >
-                    {
-                        svgs.map((svg) => (
-                            <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow duration-300">
-                                <div class="card-body">
-                                    <h3 class="card-title text-lg font-semibold">
-                                        {svg.name}
-                                    </h3>
-                                    <div class="overflow-hidden rounded mb-4">
-                                        <div class="w-full h-48 flex items-center justify-center bg-gray-100" set:html={svg?.code_svg}>
-                                        
+                <h2 class="text-2xl font-bold mb-4">
+                    {ui[locale].gallery.title}
+                </h2>
+
+                {
+                    !user ? (
+                        <div class="text-center p-8">
+                            <p class="text-lg text-warning">
+                                {ui[locale].gallery.notLoggedIn}
+                            </p>
+                            <a href="/login" class="btn btn-primary mt-4">
+                                {locale === "fr" ? "Se connecter" : "Login"}
+                            </a>
+                        </div>
+                    ) : svgs.length === 0 ? (
+                        <div class="text-center p-8">
+                            <p class="text-lg text-base-content/70">
+                                {ui[locale].gallery.noSvgs}
+                            </p>
+                            <a href="/generator" class="btn btn-primary mt-4">
+                                {locale === "fr"
+                                    ? "Créer un SVG"
+                                    : "Create SVG"}
+                            </a>
+                        </div>
+                    ) : (
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {svgs.map((svg) => (
+                                <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow duration-300">
+                                    <div class="card-body">
+                                        <h3 class="card-title text-lg font-semibold">
+                                            {svg.name}
+                                        </h3>
+                                        <div class="overflow-hidden rounded mb-4">
+                                            <div
+                                                class="w-full h-48 flex items-center justify-center bg-gray-100"
+                                                set:html={svg?.code_svg}
+                                            ></div>
                                         </div>
                                     </div>
+                                    <a
+                                        class="btn btn-soft btn-secondary w-full sm:w-auto"
+                                        href={`/gallery/${svg.id}`}
+                                    >
+                                        {ui[locale].gallery.viewDetails}
+                                    </a>
                                 </div>
-                                <a class="btn btn-soft btn-secondary w-full sm:w-auto" href={`/gallery/${svg.id}`}>{ui[locale].gallery.viewDetails}</a>
-
-                            </div>
-                        ))
-                    }
-                </div>
-                )}
+                            ))}
+                        </div>
+                    )
+                }
             </div>
         </div>
     </div>

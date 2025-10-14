@@ -1,4 +1,4 @@
-import  pb  from "../../utils/pb";
+import pb from "../../utils/pb";
 import { Collections } from "../../utils/pocketbase-types";
 
 export const POST = async ({ request, cookies }) => {

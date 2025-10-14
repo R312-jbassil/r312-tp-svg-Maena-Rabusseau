@@ -11,36 +11,49 @@ console.log("Astro.params.id =", id);
 const svg: SvgRecord = await pb.collection(Collections.Svg).getOne(id);
 svg.chat_history = JSON.parse(svg.chat_history) || [];
 
-const locale = Astro.locals.lang as 'en' | 'fr' ?? 'en';
-console.log('Locale in gallery detail:', locale);
+const locale = (Astro.locals.lang as "en" | "fr") ?? "en";
+console.log("Locale in gallery detail:", locale);
 ---
 
 <Layout title={svg.name}>
   <div class="container mx-auto min-h-screen flex flex-col">
-
     <div class="flex w-full flex-col lg:flex-row flex-grow">
       <!-- Zone SVG -->
-      <div id="svg-preview" class="card bg-base-200 rounded-box p-6 flex-1 overflow-auto">
-        <h2 class="text-2xl font-bold mb-4">{ui[locale].generator.previewTitle}</h2>
-        <div set:html={svg?.code_svg}></div>
+      <div
+        id="svg-preview"
+        class="card bg-base-200 rounded-box p-6 flex-1 overflow-auto"
+      >
+        <h2 class="text-2xl font-bold mb-4">
+          {ui[locale].generator.previewTitle}
+        </h2>
+        <div set:html={svg?.code_svg} />
       </div>
 
-    
       <div class="divider lg:divider-horizontal"></div>
 
       <div class="card bg-base-200 rounded-box p-6 flex-1 flex flex-col">
-        <h2 class="text-2xl font-bold mb-4">{ui[locale].generator.conversationTitle}</h2>
+        <h2 class="text-2xl font-bold mb-4">
+          {ui[locale].generator.conversationTitle}
+        </h2>
 
-      
-        <div id="chat-history" class="flex flex-col gap-4 w-full mb-20 overflow-y-auto flex-grow">
+        <div
+          id="chat-history"
+          class="flex flex-col gap-4 w-full mb-20 overflow-y-auto flex-grow"
+        >
           {
-            (Array.isArray(svg?.chat_history) && svg.chat_history.length > 0) ? (
+            Array.isArray(svg?.chat_history) && svg.chat_history.length > 0 ? (
               svg.chat_history.map((msg) => (
-                <div class={`chat ${msg.role === 'user' ? 'chat-start' : 'chat-end'}`}>
-                  <div class={`chat-bubble ${msg.role === 'user' ? 'bg-primary text-primary-content' : 'bg-secondary text-secondary-content'}`}>
+                <div
+                  class={`chat ${msg.role === "user" ? "chat-start" : "chat-end"}`}
+                >
+                  <div
+                    class={`chat-bubble ${msg.role === "user" ? "bg-primary text-primary-content" : "bg-secondary text-secondary-content"}`}
+                  >
                     <pre>{msg.content}</pre>
                   </div>
-                  <div class="chat-footer opacity-60 text-xs mt-1">{msg.role}</div>
+                  <div class="chat-footer opacity-60 text-xs mt-1">
+                    {msg.role}
+                  </div>
                 </div>
               ))
             ) : (
@@ -49,26 +62,40 @@ console.log('Locale in gallery detail:', locale);
           }
         </div>
 
-   
-        <form id="input-prompt-form" class="flex flex-col gap-2 w-full bg-base-300 p-4 rounded-lg" method="POST" autocomplete="off">
-          <input type="hidden" name="history" value={JSON.stringify(svg?.chat_history)} />
+        <form
+          id="input-prompt-form"
+          class="flex flex-col gap-2 w-full bg-base-300 p-4 rounded-lg"
+          method="POST"
+          autocomplete="off"
+        >
+          <input
+            type="hidden"
+            name="history"
+            value={JSON.stringify(svg?.chat_history)}
+          />
           <input type="hidden" name="id" value={svg?.id} />
           <div class="flex items-center gap-2">
-            <input id="prompt-input" name="editPrompt" type="text" class="input flex-grow" placeholder={ui[locale].generator.promptEditPlaceholder} />
-            <button class="btn btn-primary" type="submit">{ui[locale].generator.sendButton}</button>
+            <input
+              id="prompt-input"
+              name="editPrompt"
+              type="text"
+              class="input flex-grow"
+              placeholder={ui[locale].generator.promptEditPlaceholder}
+            />
+            <button class="btn btn-primary" type="submit"
+              >{ui[locale].generator.sendButton}</button
+            >
           </div>
         </form>
       </div>
     </div>
   </div>
 
-
-
   <script>
     //@ts-nocheck
-    const form = document.getElementById('input-prompt-form');
-    const svgPreview = document.getElementById('svg-preview');
-    const chatHistory = document.getElementById('chat-history');
+    const form = document.getElementById("input-prompt-form");
+    const svgPreview = document.getElementById("svg-preview");
+    const chatHistory = document.getElementById("chat-history");
 
     // Fonction pour générer le SVG à partir du prompt
     async function generateSVG(prompt) {
@@ -81,22 +108,22 @@ console.log('Locale in gallery detail:', locale);
     }
 
     // Soumission du formulaire
-    form?.addEventListener('submit', async (e) => {
+    form?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
 
       // Nouveau message utilisateur
       let prompt = {
-        role: 'user',
-        content: formData.get('editPrompt')
+        role: "user",
+        content: formData.get("editPrompt"),
       };
 
       // Historique existant
-      let history = JSON.parse(formData.get('history') || "[]");
+      let history = JSON.parse(formData.get("history") || "[]");
       history.push(prompt);
 
       // Reset champ texte
-      document.getElementById('prompt-input').value = '';
+      document.getElementById("prompt-input").value = "";
 
       // Loader
       svgPreview.innerHTML = `<span class="loading loading-ring loading-xl"></span>`;
@@ -115,7 +142,7 @@ console.log('Locale in gallery detail:', locale);
       let aiResponse = await generateSVG({ history });
 
       // Ajout réponse IA
-      history.push({ role: 'assistant', content: aiResponse });
+      history.push({ role: "assistant", content: aiResponse });
 
       // Extraction du SVG si présent
       const svgMatch = aiResponse.match(/<svg[\s\S]*?<\/svg>/i);
@@ -127,7 +154,7 @@ console.log('Locale in gallery detail:', locale);
       // Ajout de la réponse au chat
       chatHistory.innerHTML += `
         <div class="chat chat-end">
-          <div class="chat-bubble bg-secondary text-secondary-content">
+          <div class="chat-bubble bg-secondary text-secondary-content  ">
             <pre>${aiResponse}</pre>
           </div>
           <div class="chat-footer opacity-60 text-xs mt-1">assistant</div>

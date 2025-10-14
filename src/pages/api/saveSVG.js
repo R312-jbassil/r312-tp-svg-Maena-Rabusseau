@@ -1,6 +1,8 @@
 import pb from "../../utils/pb";
 import { Collections } from "../../utils/pocketbase-types";
 
+
+// Fonction pour gérer la sauvegarde d'un SVG
 export async function POST({ request }) {
   const data = await request.json();
   console.log("Received data to save:", data);
